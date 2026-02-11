@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        img {
+            max-width: 100%;
+            border: 2px solid #333;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Image Loading Test</h1>
+
+    <div class="test-container">
+        <h2>Photo 1 Test</h2>
+        <img src="photo1.jpg" alt="Photo 1">
+        <p>If you see the image above, photo1.jpg is loading correctly.</p>
+    </div>
+
+    <div class="test-container">
+        <h2>Raghava Face Test</h2>
+        <img src="raghava-face.jpg" alt="Raghava Face">
+        <p>If you see the image above, raghava-face.jpg is loading correctly.</p>
+    </div>
+
+    <div class="test-container">
+        <h2>Debugging Info</h2>
+        <p>Current page URL: <span id="url"></span></p>
+        <p>Image paths are relative to this HTML file.</p>
+    </div>
+
+    <script>
+        document.getElementById('url').textContent = window.location.href;
+
+        // Check if images load
+        const img1 = document.querySelector('img[src="photo1.jpg"]');
+        const img2 = document.querySelector('img[src="raghava-face.jpg"]');
+
+        img1.onerror = function () {
+            alert('ERROR: photo1.jpg failed to load!');
+        };
+
+        img2.onerror = function () {
+            alert('ERROR: raghava-face.jpg failed to load!');
+        };
+
+        img1.onload = function () {
+            console.log('✓ photo1.jpg loaded successfully');
+        };
+
+        img2.onload = function () {
+            console.log('✓ raghava-face.jpg loaded successfully');
+        };
+    </script>
+</body>
+
+</html>

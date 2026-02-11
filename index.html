@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Dishi 💕</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Playfair+Display:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF4081;
+            --primary-light: #FF80AB;
+            --primary-dark: #F50057;
+            --secondary: #7C4DFF;
+            --secondary-light: #B47CFF;
+            --background: #FAFAFA;
+            --surface: #FFFFFF;
+            --text-primary: #212121;
+            --text-secondary: #757575;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.18);
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--background);
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Particle Background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            /* Changed to 1 to sit above background image */
+            pointer-events: none;
+        }
+
+        /* Dynamic Background Image */
+        .background-image-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 1s ease-in-out, opacity 1s ease-in-out;
+            opacity: 0.6;
+            /* Increased opacity for better visibility */
+            filter: blur(3px);
+            /* Reduced blur so details are clearer */
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.6;
+            /* Higher opacity for photos */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) translateX(0);
+            }
+
+            25% {
+                transform: translateY(-100px) translateX(50px);
+            }
+
+            50% {
+                transform: translateY(-50px) translateX(-50px);
+            }
+
+            75% {
+                transform: translateY(-150px) translateX(100px);
+            }
+        }
+
+        /* Pages Container */
+        .pages-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .page.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .page-content {
+            max-width: 1200px;
+            width: 90%;
+            padding: 40px;
+            background: var(--surface);
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(60px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Navigation Face Button */
+        .nav-face {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 4px solid white;
+            overflow: hidden;
+        }
+
+        .nav-face:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 20px 60px rgba(255, 64, 129, 0.4);
+        }
+
+        .nav-face:active {
+            transform: scale(0.95);
+        }
+
+        .face-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #FFE5E5 0%, #FFD1DC 100%);
+        }
+
+        .nav-face img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Progress Indicator */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 64, 129, 0.1);
+            z-index: 999;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* Page Indicators */
+        .page-indicators {
+            position: fixed;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 998;
+        }
+
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 64, 129, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .indicator.active {
+            width: 12px;
+            height: 32px;
+            border-radius: 6px;
+            background: var(--primary);
+            box-shadow: 0 4px 12px rgba(255, 64, 129, 0.4);
+        }
+
+        /* Cover Page */
+        .cover-page {
+            text-align: center;
+            padding: 80px 60px;
+        }
+
+        .cover-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .cover-subtitle {
+            font-size: 1.8rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            margin-bottom: 40px;
+        }
+
+        .cover-message {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            max-width: 600px;
+            margin: 0 auto 60px;
+            line-height: 1.8;
+        }
+
+        .start-hint {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 0.6;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* Photo Gallery Pages */
+        .photo-page {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 60px;
+            padding: 60px;
+        }
+
+        .photo-container {
+            flex: 1;
+            max-width: 480px;
+            /* Reduced from 600px for a smaller, cleaner look */
+        }
+
+        .photo-frame {
+            width: 100%;
+            aspect-ratio: 4/3;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            background: linear-gradient(135deg, #FFE5E5 0%, #E1BEE7 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .photo-frame img,
+        .photo-frame video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-info {
+            flex: 1;
+        }
+
+        .photo-number {
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .photo-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .photo-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* Timeline Pages */
+        .timeline-page {
+            padding: 60px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .timeline-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .timeline-date {
+            font-size: 1rem;
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .timeline-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+
+        .timeline-story {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            line-height: 2;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .timeline-highlight {
+            background: linear-gradient(120deg, var(--primary-light) 0%, var(--secondary-light) 100%);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Final Message Page */
+        .message-page {
+            text-align: center;
+            padding: 80px 60px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .message-icon {
+            font-size: 4rem;
+            margin-bottom: 30px;
+        }
+
+        .message-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 40px;
+        }
+
+        .message-text {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            line-height: 2;
+            margin-bottom: 30px;
+        }
+
+        .signature {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-top: 60px;
+        }
+
+        /* Music Player */
+        .music-player {
+            position: fixed;
+            bottom: 40px;
+            left: 40px;
+            background: var(--surface);
+            padding: 16px 24px;
+            border-radius: 50px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            z-index: 999;
+        }
+
+        .music-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .music-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .music-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .music-artist {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .play-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .cover-title {
+                font-size: 3rem;
+            }
+
+            .photo-page {
+                flex-direction: column;
+                padding: 40px;
+            }
+
+            .photo-title,
+            .timeline-title {
+                font-size: 2rem;
+            }
+
+            .message-title {
+                font-size: 2.5rem;
+            }
+
+            .nav-face {
+                width: 60px;
+                height: 60px;
+                bottom: 30px;
+                right: 30px;
+            }
+
+            .page-indicators {
+                right: 20px;
+            }
+
+            .music-player {
+                left: 20px;
+                bottom: 110px;
+                padding: 12px 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Dynamic Background Image Container -->
+    <div class="background-image-container" id="bgImageContainer"></div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Page Indicators -->
+    <div class="page-indicators" id="pageIndicators"></div>
+
+    <!-- Particle Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Music Player -->
+    <div class="music-player">
+        <div class="music-icon">🎵</div>
+        <div class="music-info">
+            <div class="music-title">Adakaari</div>
+            <div class="music-artist">Song for Dishi</div>
+        </div>
+        <button class="play-btn" id="playBtn" onclick="toggleMusic()">▶</button>
+        <audio id="bgMusic" loop>
+            <source src="photos/misc/adakaari.opus" type="audio/ogg; codecs=opus">
+            <source src="photos/misc/adakaari.opus" type="audio/ops">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+
+    <!-- Pages Container -->
+    <div class="pages-container">
+        <!-- Page 1: Cover -->
+        <div class="page active" data-page="0">
+            <div class="page-content cover-page">
+                <h1 class="cover-title">For Dishi</h1>
+                <p class="cover-subtitle">I tried xD</p>
+                <p class="cover-message">
+                    I promised no gaslighting this time.
+                    I LOVE YOU . Let's go!
+                </p>
+                <div class="start-hint">
+                    <span>Click my face to begin</span>
+                    <span>→</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 2: Photo 1 -->
+        <div class="page" data-page="1">
+            <div class="page-content photo-page">
+                <div class="photo-container">
+                    <div class="photo-frame">
+                        <video src="videos/moment1.mp4" autoplay loop muted playsinline
+                            poster="photos/gallery/photo1.jpg"></video>
+                    </div>
+                </div>
+                <div class="photo-info">
+
+                    <h2 class="photo-title">Earrings</h2>
+                    <p class="photo-description">
+                        I promise to buy you more earrings and touch both of them myself and tell you how beautiful
+                        you are
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 3: Photo 2 -->
+        <div class="page" data-page="2">
+            <div class="page-content photo-page">
+                <div class="photo-info">
+
+                    <h2 class="photo-title">Looking at you</h2>
+                    <p class="photo-description">
+                        I promise to look at you like this
+                    </p>
+                </div>
+                <div class="photo-container">
+                    <div class="photo-frame">
+                        <img src="photos/gallery/gallery1.jpeg" alt="Our moment">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 4: Photo 3 -->
+        <div class="page" data-page="3">
+            <div class="page-content photo-page">
+                <div class="photo-container">
+                    <div class="photo-frame">
+                        <video src="videos/moment3.mp4" autoplay loop muted playsinline
+                            poster="photos/gallery/photo1.jpg"></video>
+                    </div>
+                </div>
+                <div class="photo-info">
+
+                    <h2 class="photo-title">Waiting for you</h2>
+                    <p class="photo-description">
+                        I promise to wait for you to get ready like this . I MEAN LOOOOKKK ATTT YOOOUUU.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <!-- Page 4: Photo 4 -->
+        <div class="page" data-page="4">
+            <div class="page-content photo-page">
+                <div class="photo-info">
+
+                    <h2 class="photo-title">Walks</h2>
+                    <p class="photo-description">
+                        I promise to walk with you forever
+                    </p>
+                </div>
+                <div class="photo-container">
+                    <div class="photo-frame">
+                        <video src="videos/moment4.mp4" autoplay loop muted playsinline
+                            poster="photos/gallery/photo1.jpg"></video>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Page 5: Photo 5 -->
+        <div class="page" data-page="5">
+            <div class="page-content photo-page">
+                <div class="photo-container">
+                    <div class="photo-frame">
+                        <img src="photos/gallery/moment5.jpg" alt="Our moment">
+                    </div>
+                </div>
+                <div class="photo-info">
+
+                    <h2 class="photo-title">Photos</h2>
+                    <p class="photo-description">
+                        I promise to take more uncle-aunty selfies with you
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 6: Photo 6 -->
+        <div class="page" data-page="6">
+            <div class="page-content photo-page">
+                <div class="photo-info">
+
+                    <h2 class="photo-title">Your carry bag</h2>
+                    <p class="photo-description">
+                        I promise to carry your things around for you
+                    </p>
+                </div>
+                <div class="photo-container">
+                    <div class="photo-frame">
+                        <img src="photos/gallery/moment6.jpg" alt="Our moment">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 7: Final Message -->
+        <div class="page" data-page="7">
+            <div class="page-content message-page">
+                <div class="message-icon">💕</div>
+                <h2 class="message-title">My Love Letter</h2>
+                <p class="message-text">
+                    Dishi, every moment with you feels like magic. You've brought so much
+                    joy, laughter, and love into my life. Your smile brightens my darkest days,
+                    and your laugh is my favorite sound in the world.
+                </p>
+                <p class="message-text">
+                    Thank you for being you—for your kindness, your warmth, your beautiful heart.
+                    Thank you for choosing me every day, for supporting my dreams, and for making
+                    life an incredible adventure.
+                </p>
+                <p class="message-text">
+                    I am so grateful for you, for us, and for every precious moment we share.
+                    You are my best friend, my partner in crime, and the love of my life.
+                </p>
+                <p class="message-text">
+                    Happy Valentine's Day, my love! ❤️
+                </p>
+                <div class="signature">Forever yours,<br>Raghav</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Face Button -->
+    <div class="nav-face" id="navFace" onclick="nextPage()">
+        <img src="photos/misc/raghava-face.jpg" alt="Click to continue">
+    </div>
+
+    <script>
+        // State
+        let currentPage = 0;
+        const totalPages = document.querySelectorAll('.page').length;
+
+        // Background Images Configuration - Add files to 'photos/background/' folder
+        // You can segregate different photos for different purposes now!
+        const backgroundImages = [
+            'photos/background/background1.jpg', // Cover Page
+            'photos/background/background2.jpg', // Photo 1
+            'photos/background/background3.jpg', // Photo 2
+            'photos/background/background1.jpg', // Photo 3
+            'photos/background/background2.jpg', // Photo 4
+            'photos/background/background3.jpg', // Photo 5
+            'photos/background/background1.jpg', // Photo 6
+            'photos/background/background2.jpg'  // Final Message
+        ];
+
+        // Initialize
+        function init() {
+            createParticles();
+            createPageIndicators();
+            updateProgress();
+            updateBackground(0); // Initialize first background
+        }
+
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            // Add files to 'photos/floating/' folder
+            const particleImages = [
+                'photos/floating/float1.jpg',
+                'photos/floating/float2.jpg',
+                'photos/floating/float3.jpg',
+                'photos/floating/float4.jpg'
+            ];
+
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = Math.random() * 100 + 50 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+
+                // Randomly select an image
+                const randomImg = particleImages[Math.floor(Math.random() * particleImages.length)];
+                particle.style.backgroundImage = `url('${randomImg}')`;
+
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = Math.random() * 10 + 15 + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Create page indicators
+        function createPageIndicators() {
+            const container = document.getElementById('pageIndicators');
+            for (let i = 0; i < totalPages; i++) {
+                const indicator = document.createElement('div');
+                indicator.className = 'indicator';
+                if (i === 0) indicator.classList.add('active');
+                indicator.onclick = () => goToPage(i);
+                container.appendChild(indicator);
+            }
+        }
+
+        // Navigate to next page
+        function nextPage() {
+            if (currentPage < totalPages - 1) {
+                goToPage(currentPage + 1);
+            } else {
+                // Loop back to start
+                goToPage(0);
+            }
+        }
+
+        // Go to specific page
+        function goToPage(pageNum) {
+            // Remove active class from current page
+            document.querySelector('.page.active').classList.remove('active');
+
+            // Add active class to new page
+            const pages = document.querySelectorAll('.page');
+            pages[pageNum].classList.add('active');
+
+            // Update current page
+            currentPage = pageNum;
+
+            // Update indicators
+            const indicators = document.querySelectorAll('.indicator');
+            indicators.forEach((ind, idx) => {
+                ind.classList.toggle('active', idx === pageNum);
+            });
+
+            // Update progress
+            updateProgress();
+
+            // Update background image
+            updateBackground(pageNum);
+        }
+
+        // Update background image
+        function updateBackground(pageNum) {
+            const container = document.getElementById('bgImageContainer');
+            // Use different images if available, otherwise fallback or cycle using modulo
+            const imageIndex = pageNum % backgroundImages.length;
+            const imageUrl = backgroundImages[imageIndex];
+
+            container.style.backgroundImage = `url('${imageUrl}')`;
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const progress = ((currentPage + 1) / totalPages) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        // Music player
+        function toggleMusic() {
+            const audio = document.getElementById('bgMusic');
+            const playBtn = document.getElementById('playBtn');
+
+            if (audio.paused) {
+                audio.play();
+                playBtn.innerHTML = '⏸';
+            } else {
+                audio.pause();
+                playBtn.innerHTML = '▶';
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextPage();
+            } else if (e.key === 'ArrowLeft') {
+                if (currentPage > 0) {
+                    goToPage(currentPage - 1);
+                }
+            }
+        });
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+
+</html>
